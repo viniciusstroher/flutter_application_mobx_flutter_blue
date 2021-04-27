@@ -20,13 +20,13 @@ class _BluetoothDeviceCheckerState extends State<BluetoothDeviceChecker> {
     await FlutterBlue.instance.startScan(timeout: Duration(seconds: 2));
 
     subscriptionScan = 
-    FlutterBlue.instance.scanResults.listen((results) async {
+    FlutterBlue.instance.scanResults.listen((bles) async {
           
-      for (ScanResult result in results) {
+      for (ScanResult ble in bles) {
         try{
 
-          if(result.device.name.isNotEmpty){
-            await result.device.connect();
+          if(ble.device.name.isNotEmpty){
+            await ble.device.connect();
           }
           
         }catch (errorBluetooth){
