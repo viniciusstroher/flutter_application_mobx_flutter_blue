@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_mobx_flutter_blue/store/teste.store.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-
 import 'components/bluetooth.chip.checker.dart';
-import 'components/bluetooth.device.checker.dart';
 
 void main() {
   runApp(MyApp());

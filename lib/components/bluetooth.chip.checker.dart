@@ -5,10 +5,11 @@ import 'dart:async';
 import 'bluetooth.device.checker.dart';
 
 class BluetoothChipChecker extends StatelessWidget {
-
+  final poolingSeconds = 10;
+  
   @override
   Widget build(BuildContext context) {
-    Stream<bool> stream = Stream.periodic(Duration(seconds: 1)).asyncMap((_) async {
+    Stream<bool> stream = Stream.periodic(Duration(seconds: poolingSeconds)).asyncMap((_) async {
       bool available = await FlutterBlue.instance.isAvailable;
       bool on = await FlutterBlue.instance.isOn;
       return available && on;
@@ -23,7 +24,9 @@ class BluetoothChipChecker extends StatelessWidget {
                   initialData: false,
                   builder: (c, snapshot) {
                     if (snapshot.hasData) {
-                      return BluetoothDeviceChecker();
+                      if(snapshot.data){
+                        return BluetoothDeviceChecker();
+                      }
                     }
                     return CircularProgressIndicator();
                     // children: snapshot.data == null || snapshot.data.length == 0 ? 

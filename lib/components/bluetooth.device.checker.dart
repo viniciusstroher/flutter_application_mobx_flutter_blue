@@ -5,13 +5,19 @@ import 'dart:async';
 class BluetoothDeviceChecker extends StatelessWidget {
   
   Future<void> connectKnownDevices() async {
-    FlutterBlue.instance.startScan(timeout: Duration(seconds: 2));
+    await FlutterBlue.instance.startScan(timeout: Duration(seconds: 2));
     print("Scanning devices");
     FlutterBlue.instance.scanResults.listen((results) async {
       // List<BluetoothDevice> devices = new List<BluetoothDevice>.of([]);
       for (ScanResult result in results) {
         try{
-          await result.device.connect();
+          // print(BluetoothDeviceState.values);
+          
+          if(result.device.name.isNotEmpty){
+            await result.device.connect();
+          }
+
+          await FlutterBlue.instance.stopScan();
         }catch (errorBluetooth){
           print(errorBluetooth);
         }
@@ -19,8 +25,6 @@ class BluetoothDeviceChecker extends StatelessWidget {
     });
   }
 
-
-  
   @override
   Widget build(BuildContext context) {
     const fiveSeconds = const Duration(seconds: 10);
