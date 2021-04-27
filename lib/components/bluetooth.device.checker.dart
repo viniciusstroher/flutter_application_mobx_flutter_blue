@@ -26,10 +26,11 @@ class _BluetoothDeviceCheckerState extends State<BluetoothDeviceChecker> {
         try{
 
           if(ble.device.name.isNotEmpty){
-            await ble.device.connect();
+            await ble.device.disconnect();
+            await ble.device.connect(autoConnect: false);
           }
           
-        }catch (errorBluetooth){
+        } on Exception catch (errorBluetooth) {
           print(errorBluetooth);
         }
         
@@ -42,7 +43,7 @@ class _BluetoothDeviceCheckerState extends State<BluetoothDeviceChecker> {
 
   @override
   initState() {
-    poolingTime = 10;
+    poolingTime = 20;
     timer = new Timer.periodic(Duration(seconds: poolingTime), (Timer t) async => await connectKnownDevices());
     
     super.initState();
