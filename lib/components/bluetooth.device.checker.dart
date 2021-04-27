@@ -2,43 +2,69 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'dart:async';
 
-class BluetoothDeviceChecker extends StatelessWidget {
+class BluetoothDeviceChecker extends StatefulWidget {
   
+  @override
+  _BluetoothDeviceCheckerState createState() => _BluetoothDeviceCheckerState();
+}
+
+class _BluetoothDeviceCheckerState extends State<BluetoothDeviceChecker> {
+  int poolingTime;
+  StreamSubscription<List<ScanResult>> subscriptionScan;
+  Timer timer;
+
   Future<void> connectKnownDevices() async {
-    await FlutterBlue.instance.startScan(timeout: Duration(seconds: 2));
+    
     print("Scanning devices");
+    
+    subscriptionScan = 
     FlutterBlue.instance.scanResults.listen((results) async {
-      // List<BluetoothDevice> devices = new List<BluetoothDevice>.of([]);
+          
       for (ScanResult result in results) {
         try{
-          // print(BluetoothDeviceState.values);
-          
+
           if(result.device.name.isNotEmpty){
             await result.device.connect();
           }
-
-          await FlutterBlue.instance.stopScan();
+          
         }catch (errorBluetooth){
           print(errorBluetooth);
         }
+        
       }
+      
+      subscriptionScan.cancel();
     });
+    
+  }
+
+  @override
+  initState() {
+    poolingTime = 10;
+    timer = new Timer.periodic(Duration(seconds: poolingTime), (Timer t) async => await connectKnownDevices());
+    
+    super.initState();
+  }
+
+  @override
+  void dispose(){
+    if(subscriptionScan != null){
+      subscriptionScan.cancel();
+    }
+
+    if(timer != null){
+      timer.cancel();
+    }
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    const fiveSeconds = const Duration(seconds: 10);
-    new Timer.periodic(fiveSeconds, (Timer t) async => await connectKnownDevices());
 
-    // connectKnownDevices
     return Container(
       child: Column(
               children: [
-                // StreamBuilder(
-                //   stream: Stream.periodic(Duration(seconds: 5), (x) async => await connectKnownDevices() ), 
-                //   builder: (context, snapshot) {  
-                //     return Container();
-                //   },),
                 StreamBuilder<List<BluetoothDevice>>(
                   stream: Stream.periodic(Duration(seconds: 10))
                             .asyncMap((_) => FlutterBlue.instance.connectedDevices),
@@ -53,5 +79,4 @@ class BluetoothDeviceChecker extends StatelessWidget {
             ),
           );
   }
-  
 }
