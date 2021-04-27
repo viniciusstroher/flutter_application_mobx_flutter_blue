@@ -21,7 +21,8 @@ class _BluetoothDeviceCheckerState extends State<BluetoothDeviceChecker> {
 
     subscriptionScan = 
     FlutterBlue.instance.scanResults.listen((bles) async {
-          
+      List<BluetoothDevice> bleDevicesConnected = await FlutterBlue.instance.connectedDevices;      
+      //bleDevicesConnected desatualizado.
       for (ScanResult ble in bles) {
         try{
 
@@ -72,11 +73,19 @@ class _BluetoothDeviceCheckerState extends State<BluetoothDeviceChecker> {
                   stream: Stream.periodic(Duration(seconds: 10))
                             .asyncMap((_) => FlutterBlue.instance.connectedDevices),
                   initialData: [],
-                  builder: (c, snapshot) => Column(
-                    children: snapshot.data == null || snapshot.data.length == 0 ? 
-                              [Text('Sem dispositivos conectados')] : 
-                              snapshot.data.map((device) => Text('#${device.name}')).toList()
-                  )
+                  builder: (c, snapshot) {
+                    if(snapshot.data == null || snapshot.data.length == 0){
+                      return Text('Sem dispositivos conectados');
+                    }
+
+                    return Column(children: snapshot.data.map((device) {
+                                  // device.state.listen((event) { 
+                                  //   print(event);
+                                  //   return Text('#${device.name}');
+                                  // });
+                                return Text('#${device.name}');
+                            }).toList());
+                  }
                 )
               ],
             ),
