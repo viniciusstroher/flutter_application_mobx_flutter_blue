@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'dart:async';
 
+import 'bluetooth.device.characterist.dart';
+
 class BluetoothDeviceChecker extends StatefulWidget {
   
   @override
@@ -22,7 +24,7 @@ class _BluetoothDeviceCheckerState extends State<BluetoothDeviceChecker> {
     subscriptionScan = 
     FlutterBlue.instance.scanResults.listen((bles) async {
       List<BluetoothDevice> bleDevicesConnected = await FlutterBlue.instance.connectedDevices;      
-      //bleDevicesConnected desatualizado.
+
       for (ScanResult ble in bles) {
         try{
 
@@ -36,10 +38,8 @@ class _BluetoothDeviceCheckerState extends State<BluetoothDeviceChecker> {
         }
         
       }
-      
       subscriptionScan.cancel();
     });
-    
   }
 
   @override
@@ -78,13 +78,7 @@ class _BluetoothDeviceCheckerState extends State<BluetoothDeviceChecker> {
                       return Text('Sem dispositivos conectados');
                     }
 
-                    return Column(children: snapshot.data.map((device) {
-                                  // device.state.listen((event) { 
-                                  //   print(event);
-                                  //   return Text('#${device.name}');
-                                  // });
-                                return Text('#${device.name}');
-                            }).toList());
+                    return Column(children: snapshot.data.map((device) => BluetoothDeviceCharacteristict(device: device) ).toList());
                   }
                 )
               ],
