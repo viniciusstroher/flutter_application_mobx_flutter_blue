@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'dart:async';
 
+import 'bluetooth.device.data.dart';
+
 class BluetoothDeviceCharacteristict extends StatefulWidget {
   final BluetoothDevice device;
 
@@ -14,7 +16,7 @@ class BluetoothDeviceCharacteristict extends StatefulWidget {
 class _BluetoothDeviceCharacteristict extends State<BluetoothDeviceCharacteristict> {
 
   @override
-  initState() async {
+  initState() {
     super.initState();
   }
 
@@ -35,7 +37,14 @@ class _BluetoothDeviceCharacteristict extends State<BluetoothDeviceCharacteristi
             return Text('Sem dispositivos conectados');
           }
 
-          return Text('# ${widget.device.name} - ${discoveredServices.data[2]}');
+          BluetoothService service = discoveredServices.data[2];
+          BluetoothCharacteristic characteristics = service.characteristics[0];
+          
+          return Column(children: [
+              Text('# ${widget.device.name}'),
+              BluetoothDeviceData(characteristic: characteristics)
+          ]);
+          
         }
       );
     });
