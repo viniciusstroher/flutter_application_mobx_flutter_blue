@@ -35,7 +35,7 @@ class _BluetoothDeviceData extends State<BluetoothDeviceData> {
           if(snapshot.data == null || snapshot.data.length == 0){
             return Text('no rx');
           }
-
+          
           return Text(utf8.decode(snapshot.data));
         }
       );

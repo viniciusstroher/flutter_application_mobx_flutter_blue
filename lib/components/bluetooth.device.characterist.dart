@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'dart:async';
@@ -39,10 +41,18 @@ class _BluetoothDeviceCharacteristict extends State<BluetoothDeviceCharacteristi
 
           BluetoothService service = discoveredServices.data[2];
           BluetoothCharacteristic characteristics = service.characteristics[0];
-          
+          BluetoothCharacteristic characteristicsWrite  = service.characteristics[1];
+
           return Column(children: [
               Text('# ${widget.device.name}'),
-              BluetoothDeviceData(characteristic: characteristics)
+              BluetoothDeviceData(characteristic: characteristics),
+              FutureBuilder(future: characteristicsWrite.write(utf8.encode("ACK"), withoutResponse: true), builder: (cWrite, writeService) {
+                print(cWrite);
+                print(writeService);
+
+                return Container(child: Text('Send Ack'));
+              })
+              
           ]);
           
         }
