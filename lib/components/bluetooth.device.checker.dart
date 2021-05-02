@@ -30,6 +30,7 @@ class _BluetoothDeviceCheckerState extends State<BluetoothDeviceChecker> {
 
       for (ScanResult ble in bles) {
         try{
+          BluetoothDevice device = store.getDevice();
           // não pode ter dispositivos conectados
           if(ble.device.name.isNotEmpty && bleDevicesConnected.length == 0){
             // adicionar ao mobx o dispositivo adicionado
