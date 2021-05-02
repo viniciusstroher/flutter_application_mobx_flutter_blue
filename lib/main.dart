@@ -1,6 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_mobx_flutter_blue/store/teste.store.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'components/ble/ble.connected.devices.dart';
+import 'components/ble/ble.scanner.devices.dart';
 import 'components/bluetooth.chip.checker.dart';
 
 void main() {
@@ -52,6 +57,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final store = TesteStore();
   
+  Timer timer;
+
+  @override
+  initState(){
+    // timer = new Timer.periodic(
+    //   Duration(seconds: 15), 
+    //   (Timer t) async => await FlutterBlue.instance.startScan(timeout: Duration(seconds: 4))
+    //   );
+  }
+
+  @override
+  void dispose(){
+    // if(timer != null){
+    //   timer.cancel();
+    // }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +119,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
             ),
             // BluetoothDeviceChecker()
-            BluetoothChipChecker()
+            BluetoothChipChecker(),
+            // BleScannerDevices(),
+            BleConnectedDevices()
           ],
         ),
       ),

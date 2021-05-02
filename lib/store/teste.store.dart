@@ -1,4 +1,5 @@
 import 'package:flutter_application_mobx_flutter_blue/components/bluetooth.device.checker.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mobx/mobx.dart';
 
 // Include generated file
@@ -13,7 +14,18 @@ abstract class _TesteStore with Store {
   int value = 0;
 
   @observable
-  BluetoothDevice 
+  BluetoothDevice device;
+  
+  @action
+  setDevice(BluetoothDevice newDevice){
+    device = newDevice;
+  }
+
+  @action
+  getDevice(){
+    return device;
+  }
+
   @action
   void increment() {
     value++;

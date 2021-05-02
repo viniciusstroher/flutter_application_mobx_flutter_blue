@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_application_mobx_flutter_blue/store/teste.store.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'dart:async';
 
@@ -11,6 +12,8 @@ class BluetoothDeviceChecker extends StatefulWidget {
 }
 
 class _BluetoothDeviceCheckerState extends State<BluetoothDeviceChecker> {
+  final store = TesteStore();
+  
   int poolingTime;
   StreamSubscription<List<ScanResult>> subscriptionScan;
   Timer timer;
@@ -27,9 +30,11 @@ class _BluetoothDeviceCheckerState extends State<BluetoothDeviceChecker> {
 
       for (ScanResult ble in bles) {
         try{
-
-          if(ble.device.name.isNotEmpty){
-            await ble.device.disconnect();
+          // não pode ter dispositivos conectados
+          if(ble.device.name.isNotEmpty && bleDevicesConnected.length == 0){
+            // adicionar ao mobx o dispositivo adicionado
+            // await ble.device.disconnect();
+            store.setDevice(ble.device);
             await ble.device.connect(autoConnect: false);
           }
           
